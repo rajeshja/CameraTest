@@ -31,7 +31,6 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
-
 	public CameraView(Context context, AttributeSet  attrs) {
 		super(context, attrs);
 
@@ -54,11 +53,11 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void reopenCamera() {
-		camera = camera.open();
+		camera = Camera.open();
 	}
 
 	public void  surfaceCreated(SurfaceHolder holder) {
-		Camera camera = Camera.open();
+		camera = Camera.open();
 		try {
 			camera.setPreviewDisplay(getHolder());
 		} catch (IOException e) {

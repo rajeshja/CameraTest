@@ -11,10 +11,10 @@
     android:layout_height="wrap_content" 
     android:text="Hello World, CameraTest"
     />
-<rja.android.camera.CameraView
+<!-- rja.android.camera.CameraView
 		android:id="@+id/camera_preview"
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
-		/> 
+		/ -->
 </LinearLayout>
 
