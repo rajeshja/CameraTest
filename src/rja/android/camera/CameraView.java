@@ -97,22 +97,26 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		Size selectedSize = null;
 
 		for(Size size: sizes) {
+			Log.d(LOG_CAT, "Trying  " + size.width + "x" + size.height);
 			if ((size.width <= (width - 20)) && (size.height <= (height - 20))) {
 
 				if ((selectedSize == null)
 					|| ((selectedSize.width < size.width)
 						&& (selectedSize.height < size.height))) {
 					selectedSize = size;
+					Log.d(LOG_CAT, "Selected value: " + selectedSize.width + "x" + selectedSize.height);
 				}
 
 			}
 		}
 
-		if ((selectedSize == null) && (sizes != null) && (sizes.size()>=0)) {
+		if ((selectedSize == null) && (sizes != null) && (sizes.size()>0)) {
 			selectedSize = sizes.get(0);
 		} else {
 			selectedSize = null;
 		}
+
+		Log.d(LOG_CAT, "Final value: " + selectedSize.width + "x" + selectedSize.height);
 
 		return selectedSize;
 	}
