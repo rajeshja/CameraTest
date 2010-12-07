@@ -5,6 +5,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
@@ -22,7 +23,9 @@ import java.util.List;
  */
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
-	private Camera camera;
+	public Camera camera;
+
+	private static final String LOG_CAT = "CameraView";
 
 	public CameraView(Context context) {
 		super(context);
@@ -47,17 +50,22 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void releaseCamera() {
 		if (camera != null) {
+			camera.stopPreview();
 			camera.release();
 			camera = null;
 		}
 	}
 
 	public void reopenCamera() {
-		camera = Camera.open();
+		if (camera == null) {
+			camera = Camera.open();
+		}
 	}
 
-	public void  surfaceCreated(SurfaceHolder holder) {
-		camera = Camera.open();
+	public void surfaceCreated(SurfaceHolder holder) {
+		if (camera == null) {
+			camera = Camera.open();
+		}
 		try {
 			camera.setPreviewDisplay(getHolder());
 		} catch (IOException e) {
@@ -65,10 +73,27 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	public void  surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Parameters cameraParams = camera.getParameters();
 		List<Size> sizes = cameraParams.getSupportedPreviewSizes();
 
+		Size selectedSize = selectSize(sizes, width, height);
+
+		Log.d(LOG_CAT, "Selected size " + selectedSize.width + "x" + selectedSize.height);
+
+		cameraParams.setPreviewSize(selectedSize.width, selectedSize.height);
+		camera.setParameters(cameraParams);
+		camera.startPreview();
+	}
+
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		if (camera != null) {
+			releaseCamera();
+		}
+	}
+
+	private Size selectSize(List<Size> sizes, int width, int height) {
+		
 		Size selectedSize;
 
 		if ((sizes != null) && (sizes.size()>=0)) {
@@ -78,7 +103,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		for(Size size: sizes) {
-			if ((size.width <= width) && (size.height <= height)) {
+			if ((size.width <= (width - 20)) && (size.height <= (height - 20))) {
 				if ((selectedSize == null)
 					|| ((selectedSize.width < size.width)
 						&& (selectedSize.height < size.height))) {
@@ -87,13 +112,6 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
-		cameraParams.setPreviewSize(selectedSize.width, selectedSize.height);
-		camera.setParameters(cameraParams);
-		camera.startPreview();
-	}
-
-	public void  surfaceDestroyed(SurfaceHolder holder) {
-		camera.stopPreview();
-		releaseCamera();
+		return selectedSize;
 	}
 }
