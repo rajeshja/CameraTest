@@ -93,6 +93,8 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private Size selectSize(List<Size> sizes, int width, int height) {
+
+		Log.d(LOG_CAT, "Target size  " + (width-20) + "x" + (height-20));
 		
 		Size selectedSize = null;
 
@@ -112,8 +114,6 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 		if ((selectedSize == null) && (sizes != null) && (sizes.size()>0)) {
 			selectedSize = sizes.get(0);
-		} else {
-			selectedSize = null;
 		}
 
 		Log.d(LOG_CAT, "Final value: " + selectedSize.width + "x" + selectedSize.height);
