@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+import android.view.ViewGroup;
 
 import java.io.IOException;
 import java.util.List;
@@ -78,6 +79,15 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		List<Size> sizes = cameraParams.getSupportedPreviewSizes();
 
 		Size selectedSize = selectSize(sizes, width, height);
+
+		ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) this.getLayoutParams();
+		int leftMargin = (width - selectedSize.width)/2;
+		int topMargin = (height - selectedSize.height)/2;
+		int rightMargin = (width - selectedSize.width) - leftMargin;
+		int bottomMargin = (height - selectedSize.height) - topMargin;
+		
+		layoutParams.setMargins(leftMargin, topMargin,rightMargin,bottomMargin);
+		this.setLayoutParams(layoutParams);
 
 		Log.d(LOG_CAT, "Selected size " + selectedSize.width + "x" + selectedSize.height);
 
