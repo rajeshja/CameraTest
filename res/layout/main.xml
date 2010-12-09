@@ -22,10 +22,6 @@
 		android:id="@+id/camera_preview"
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
-		android:layout_marginBottom="5dip"
-		android:layout_marginTop   ="5dip"
-		android:layout_marginLeft  ="5dip"
-		android:layout_marginRight ="5dip"
 		android:layout_below="@id/text"
 		android:layout_above="@id/footer"
 		/>
