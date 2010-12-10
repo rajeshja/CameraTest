@@ -4,25 +4,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView
-		android:id="@+id/text"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-		android:layout_alignParentTop="true"
-    android:text="Hello World, CameraTest"
-    />
-<TextView
-		android:id="@+id/footer"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Activity Footer"
-		android:layout_alignParentBottom="true"
-    />
-<rja.android.camera.CameraView
-		android:id="@+id/camera_preview"
-    android:layout_width="fill_parent" 
-    android:layout_height="fill_parent"
-		android:layout_below="@id/text"
-		android:layout_above="@id/footer"
-		/>
+	<rja.android.camera.CameraView
+			android:id="@+id/camera_preview"
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent"
+			/>
 </RelativeLayout>
