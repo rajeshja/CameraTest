@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
 
@@ -23,6 +24,9 @@ public class CameraTest extends Activity
         setContentView(R.layout.main);
 
 		cameraView = (CameraView) findViewById(R.id.camera_preview);
+
+		AROverlay overlay = new AROverlay(this);
+		addContentView(overlay, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
 	@Override
@@ -46,6 +50,7 @@ public class CameraTest extends Activity
 	public void showAlert(View v) {
 		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 		alertBuilder.setMessage("Clicked the preview");
+		
 		AlertDialog dialog = alertBuilder.show();
 	}
 }
