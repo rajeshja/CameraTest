@@ -1,9 +1,11 @@
 package rja.android.camera;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -18,7 +20,6 @@ public class CameraTest extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
 
 		cameraView = (CameraView) findViewById(R.id.camera_preview);
@@ -40,5 +41,11 @@ public class CameraTest extends Activity
 		Log.d(LOG_CAT, "Reopening the camera.");
 		
 		cameraView.reopenCamera();
+	}
+
+	public void showAlert(View v) {
+		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+		alertBuilder.setMessage("Clicked the preview");
+		AlertDialog dialog = alertBuilder.show();
 	}
 }
