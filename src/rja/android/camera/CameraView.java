@@ -27,6 +27,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private Camera camera;
 	private DisplayMetrics metrics;
+	private AROverlay overlay;
 
 	private static final String LOG_CAT = "CameraView";
 
@@ -53,6 +54,10 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void setMetrics(DisplayMetrics metrics) {
 		this.metrics = metrics;
+	}
+
+	public void setOverlay(AROverlay overlay) {
+		this.overlay = overlay;
 	}
 	
 	public void releaseCamera() {
@@ -86,7 +91,9 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 		Log.d(LOG_CAT, "Density is " + metrics.density);
 
-		Size selectedSize = selectSize(sizes, Math.round(width*metrics.density), Math.round(height*metrics.density));
+		Size selectedSize = selectSize(sizes, 
+									   Math.round(width*metrics.density), 
+									   Math.round(height*metrics.density));
 
 		ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) this.getLayoutParams();
 		int leftMargin = (width - selectedSize.width)/2;
@@ -97,6 +104,13 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		layoutParams.setMargins(leftMargin, topMargin,rightMargin,bottomMargin);
 		this.setLayoutParams(layoutParams);
 
+		//Do we need to create a new layoutParams object 
+		//or can we reuse the one created before?
+		ViewGroup.MarginLayoutParams overlayLayoutParams = 
+			(ViewGroup.MarginLayoutParams) overlay.getLayoutParams();
+		overlayLayoutParams.setMargins(leftMargin, topMargin,rightMargin,bottomMargin);
+		overlay.setLayoutParams(overlayLayoutParams);
+ 
 		Log.d(LOG_CAT, "Selected size " + selectedSize.width + "x" + selectedSize.height);
 
 		cameraParams.setPreviewSize(selectedSize.width, selectedSize.height);
