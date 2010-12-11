@@ -32,6 +32,9 @@ public class CameraTest extends Activity
 		cameraView.setMetrics(metrics);
 
 		AROverlay overlay = new AROverlay(this);
+
+		cameraView.setOverlay(overlay);
+
 		addContentView(overlay, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
