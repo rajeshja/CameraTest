@@ -6,7 +6,7 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.opengl.GLSurfaceView;
+import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.view.ViewGroup;
 
@@ -22,7 +22,7 @@ import java.util.List;
  * @author <a href="mailto:rajeshja@D-174758"></a>
  * @version 1.0
  */
-public class CameraView extends GLSurfaceView implements SurfaceHolder.Callback {
+public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public Camera camera;
 
@@ -42,12 +42,12 @@ public class CameraView extends GLSurfaceView implements SurfaceHolder.Callback 
 		getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 	
-//	public CameraView(Context context, AttributeSet  attrs, int defStyle) {
-//		super(context, attrs, defStyle);
-//
-//		getHolder().addCallback(this);
-//		getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-//	}
+	public CameraView(Context context, AttributeSet  attrs, int defStyle) {
+		super(context, attrs, defStyle);
+
+		getHolder().addCallback(this);
+		getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+	}
 
 	public void releaseCamera() {
 		if (camera != null) {
