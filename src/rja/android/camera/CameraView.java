@@ -86,7 +86,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 		Log.d(LOG_CAT, "Density is " + metrics.density);
 
-		Size selectedSize = selectSize(sizes, (int)(width*metrics.density), (int)(height*metrics.density));
+		Size selectedSize = selectSize(sizes, Math.round(width*metrics.density), Math.round(height*metrics.density));
 
 		ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) this.getLayoutParams();
 		int leftMargin = (width - selectedSize.width)/2;
