@@ -1,17 +1,18 @@
 package rja.android.camera;
 
+import java.io.IOException;
+import java.util.List;
+
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.ViewGroup;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Describe class CameraView here.
@@ -24,7 +25,8 @@ import java.util.List;
  */
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
-	public Camera camera;
+	private Camera camera;
+	private DisplayMetrics metrics;
 
 	private static final String LOG_CAT = "CameraView";
 
@@ -49,6 +51,10 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
+	public void setMetrics(DisplayMetrics metrics) {
+		this.metrics = metrics;
+	}
+	
 	public void releaseCamera() {
 		if (camera != null) {
 			camera.stopPreview();
@@ -78,7 +84,9 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		Parameters cameraParams = camera.getParameters();
 		List<Size> sizes = cameraParams.getSupportedPreviewSizes();
 
-		Size selectedSize = selectSize(sizes, width, height);
+		Log.d(LOG_CAT, "Density is " + metrics.density);
+
+		Size selectedSize = selectSize(sizes, (int)(width*metrics.density), (int)(height*metrics.density));
 
 		ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) this.getLayoutParams();
 		int leftMargin = (width - selectedSize.width)/2;

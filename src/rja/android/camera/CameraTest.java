@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,11 @@ public class CameraTest extends Activity
         setContentView(R.layout.main);
 
 		cameraView = (CameraView) findViewById(R.id.camera_preview);
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+		cameraView.setMetrics(metrics);
 
 		AROverlay overlay = new AROverlay(this);
 		addContentView(overlay, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
