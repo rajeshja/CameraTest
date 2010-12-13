@@ -18,6 +18,8 @@ import android.graphics.Paint;
  */
 public class AROverlay extends View {
 
+	private String message = "Hello";
+
 	/**
 	 * Creates a new <code>AROverlay</code> instance.
 	 *
@@ -31,9 +33,14 @@ public class AROverlay extends View {
 		Paint paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLUE);
-		canvas.drawText("Hello", 10, 10, paint);
+		canvas.drawText(message, 10, 10, paint);
 
 		super.onDraw(canvas);
 	} 
+
+	public void setMessage(String message) {
+		this.message = message;
+		invalidate();
+	}
 
 }
