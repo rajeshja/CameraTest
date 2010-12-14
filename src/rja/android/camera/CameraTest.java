@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class CameraTest extends Activity
@@ -26,6 +27,8 @@ public class CameraTest extends Activity
 	private CameraView cameraView;
 
 	private AROverlay overlay;
+
+	private String currentLocationProvider = LocationManager.GPS_PROVIDER;
 
 	private LocationManager locManager;
 
@@ -79,8 +82,7 @@ public class CameraTest extends Activity
 		Log.d(LOG_CAT, "Releasing the camera.");
 
 		cameraView.releaseCamera();
-
-		locManager.removeUpdates(locationListener);
+		removeLocationUpdates();
 	}
 
 	@Override
@@ -117,15 +119,40 @@ public class CameraTest extends Activity
 		
 		LocationProvider provider = locManager.getProvider(bestProvider);
 
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-
+		requestLocationUpdates();
 	}
 
-	public void showAlert(View v) {
-		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-		alertBuilder.setMessage("Clicked the preview");
+	public void onClick(View v) {
+		//AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+		//alertBuilder.setMessage("Clicked the preview");
+		//
+		//AlertDialog dialog = alertBuilder.show();
+
+
+		if (currentLocationProvider.equals(LocationManager.GPS_PROVIDER)) {
+			currentLocationProvider = LocationManager.NETWORK_PROVIDER;
+		} else {
+			currentLocationProvider = LocationManager.GPS_PROVIDER;
+		}
+
+		removeLocationUpdates();
+
+		overlay.setMessage("Getting coordinates...");
+		Toast.makeText(getApplicationContext(), currentLocationProvider, Toast.LENGTH_SHORT).show();
 		
-		AlertDialog dialog = alertBuilder.show();
+		requestLocationUpdates();
 	}
+
+	private void requestLocationUpdates() {
+		try {
+			locManager.requestLocationUpdates(currentLocationProvider, 1000, 0, locationListener);
+		} catch (Throwable e) {
+			Log.e(LOG_CAT, "There was an error requesting location updates.", e);
+		}
+	}
+
+	private void removeLocationUpdates() {
+		locManager.removeUpdates(locationListener);
+	}
+
 }

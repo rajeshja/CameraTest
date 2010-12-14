@@ -8,6 +8,6 @@
 			android:id="@+id/camera_preview"
 			android:layout_width="fill_parent" 
 			android:layout_height="fill_parent"
-			android:onClick="showAlert"
+			android:onClick="onClick"
 			/>
 </RelativeLayout>
