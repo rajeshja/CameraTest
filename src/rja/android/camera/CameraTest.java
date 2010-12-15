@@ -41,16 +41,30 @@ public class CameraTest extends Activity
 				Log.d(LOG_CAT, "Got location: " + "Latitude: " + location.getLatitude() 
 									   + ". Longitude: " + location.getLongitude());
 				if (location != null) {
-					overlay.setMessage("Latitude: " + location.getLatitude() 
-									   + ". Longitude: " + location.getLongitude());
+					String[] msg = new String[3];
+
+					msg[0] = "Latitude: " + location.getLatitude() 
+						+ ". Longitude: " + location.getLongitude();
+					msg[1] = "Provider is " + location.getProvider() + ", with accuracy " 
+						+ location.getAccuracy();
+					msg[2] = "Bearing is " + location.getBearing() + ", and altitude is "
+						+ location.getAltitude();
+					overlay.setMessage(msg);
 				}
 			}
 
-			public void onStatusChanged(String provider, int status, Bundle extras) {}
+			public void onStatusChanged(String provider, int status, Bundle extras) {
+				Log.d(LOG_CAT, "Status changed for " + provider + ", and status is " + status);
+				Log.d(LOG_CAT, "Bundles are: " + extras);
+			}
 			
-			public void onProviderEnabled(String provider) {}
+			public void onProviderEnabled(String provider) {
+				Log.d(LOG_CAT, "Enabled " + provider);
+			}
 
-			public void onProviderDisabled(String provider) {}
+			public void onProviderDisabled(String provider) {
+				Log.d(LOG_CAT, "Disabled " + provider);
+			}
 
 		};
 
@@ -69,7 +83,7 @@ public class CameraTest extends Activity
 
 		this.overlay = new AROverlay(this);
 		cameraView.setOverlay(overlay);
-		addContentView(overlay, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		addContentView(overlay, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
 		this.overlay = overlay;
 	
@@ -114,11 +128,15 @@ public class CameraTest extends Activity
 		Log.d(LOG_CAT, "Criteria: power = " + locCriteria.getPowerRequirement());
 		Log.d(LOG_CAT, "Criteria: speed = " + locCriteria.isSpeedRequired());
 
-		String bestProvider = locManager.getBestProvider(locCriteria, false);
-		Log.d(LOG_CAT, "Best provider is: " + bestProvider);
+		currentLocationProvider = locManager.getBestProvider(locCriteria, false);
+		Log.d(LOG_CAT, "Best provider is: " + currentLocationProvider);
+		Toast.makeText(getApplicationContext(), currentLocationProvider, Toast.LENGTH_SHORT).show();
 		
-		LocationProvider provider = locManager.getProvider(bestProvider);
+		LocationProvider provider = locManager.getProvider(currentLocationProvider);
 
+		requestLocationUpdates();
+
+		currentLocationProvider = LocationManager.NETWORK_PROVIDER;
 		requestLocationUpdates();
 	}
 
@@ -145,7 +163,7 @@ public class CameraTest extends Activity
 
 	private void requestLocationUpdates() {
 		try {
-			locManager.requestLocationUpdates(currentLocationProvider, 1000, 0, locationListener);
+			locManager.requestLocationUpdates(currentLocationProvider, 0, 0, locationListener);
 		} catch (Throwable e) {
 			Log.e(LOG_CAT, "There was an error requesting location updates.", e);
 		}

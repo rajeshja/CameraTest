@@ -1,11 +1,12 @@
 package rja.android.camera;
 
-import android.view.View;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint.Style;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.util.Log;
+import android.view.View;
 
 /**
  * Describe class AROverlay here.
@@ -18,7 +19,9 @@ import android.graphics.Paint;
  */
 public class AROverlay extends View {
 
-	private String message = "Hello";
+	private String[] message = {"Hello"};
+
+	private static final String LOG_CAT = "AROverlay";
 
 	/**
 	 * Creates a new <code>AROverlay</code> instance.
@@ -33,13 +36,23 @@ public class AROverlay extends View {
 		Paint paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(Color.BLUE);
-		canvas.drawText(message, 10, 10, paint);
+		paint.setTextSize(15.0f);
+
+		for (int i=0; i<message.length; i++) {
+			canvas.drawText(message[i], 10, 10 + (i*20), paint);
+		}
 
 		super.onDraw(canvas);
 	} 
 
-	public void setMessage(String message) {
+	public void setMessage(String[] message) {
 		this.message = message;
+		invalidate();
+	}
+
+	public void setMessage(String message) {
+		this.message = new String[0];
+		this.message[0] = message;
 		invalidate();
 	}
 
