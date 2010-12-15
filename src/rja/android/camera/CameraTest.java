@@ -140,27 +140,6 @@ public class CameraTest extends Activity
 		requestLocationUpdates();
 	}
 
-	public void onClick(View v) {
-		//AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-		//alertBuilder.setMessage("Clicked the preview");
-		//
-		//AlertDialog dialog = alertBuilder.show();
-
-
-		if (currentLocationProvider.equals(LocationManager.GPS_PROVIDER)) {
-			currentLocationProvider = LocationManager.NETWORK_PROVIDER;
-		} else {
-			currentLocationProvider = LocationManager.GPS_PROVIDER;
-		}
-
-		removeLocationUpdates();
-
-		overlay.setMessage("Getting coordinates...");
-		Toast.makeText(getApplicationContext(), currentLocationProvider, Toast.LENGTH_SHORT).show();
-		
-		requestLocationUpdates();
-	}
-
 	private void requestLocationUpdates() {
 		try {
 			locManager.requestLocationUpdates(currentLocationProvider, 0, 0, locationListener);
