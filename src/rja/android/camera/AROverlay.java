@@ -39,15 +39,40 @@ public class AROverlay extends View {
 		paint.setTextSize(15.0f);
 
 		for (int i=0; i<message.length; i++) {
-			canvas.drawText(message[i], 10, 10 + (i*20), paint);
+			if (message[i] != null) {
+				canvas.drawText(message[i], 10, 10 + (i*20), paint);
+			}
 		}
 
 		super.onDraw(canvas);
 	} 
 
-	public void setMessage(String[] message) {
-		this.message = message;
+	public void setLocation(String[] message) {
+
+		if (message.length != 5) {
+			this.message = new String[5];
+		}
+		this.message[0] = message[0];
+		this.message[1] = message[1];
+		this.message[2] = message[2];
+
 		invalidate();
+	}
+
+	public void setOrientation(float[] R, float[] I) {
+		if (message.length != 5) {
+			this.message = new String[5];
+		}
+
+		this.message[3] = "R is ";
+		for (int i=0; i<R.length; i++) {
+			this.message[3] += R[i] + ",";
+		}
+
+		this.message[4] = "I is ";
+		for (int i=0; i<I.length; i++) {
+			this.message[4] += I[i] + ",";
+		}
 	}
 
 	public void setMessage(String message) {

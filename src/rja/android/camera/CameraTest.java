@@ -7,6 +7,10 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,8 +24,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.hardware.SensorManager;
-import android.hardware.Sensor;
 
 
 public class CameraTest extends Activity
@@ -33,6 +35,15 @@ public class CameraTest extends Activity
 	private String currentLocationProvider = LocationManager.GPS_PROVIDER;
 
 	private LocationManager locManager;
+	
+	private SensorManager manager;
+
+	private SensorEventListener accelListener;
+	private SensorEventListener compassListener;
+	
+	private float[] accelValues;
+
+	private float[] compassValues;
 
 	private static final String LOG_CAT = "CameraTest";
 
@@ -51,7 +62,7 @@ public class CameraTest extends Activity
 						+ location.getAccuracy();
 					msg[2] = "Bearing is " + location.getBearing() + ", and altitude is "
 						+ location.getAltitude();
-					overlay.setMessage(msg);
+					overlay.setLocation(msg);
 				}
 			}
 
@@ -99,6 +110,9 @@ public class CameraTest extends Activity
 
 		cameraView.releaseCamera();
 		removeLocationUpdates();
+
+		manager.unregisterListener(accelListener);
+		manager.unregisterListener(compassListener);
 	}
 
 	@Override
@@ -141,19 +155,54 @@ public class CameraTest extends Activity
 		currentLocationProvider = LocationManager.NETWORK_PROVIDER;
 		requestLocationUpdates();
 
-		SensorManager manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		List<Sensor> sensors = manager.getSensorList(Sensor.TYPE_ALL);
+
+		accelListener = new SensorEventListener() {
+				public void onAccuracyChanged (Sensor sensor, int accuracy) {
+					Log.d(LOG_CAT, sensor.getName() + " accuracy changed to " + accuracy);
+				}
+
+				public void onSensorChanged (SensorEvent event) {
+					accelValues = event.values;
+					Log.d(LOG_CAT, event.sensor.getName() + " values are " + event.values);
+				}
+			};
+
+		Sensor accelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		manager.registerListener(accelListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+		compassListener = new SensorEventListener() {
+				public void onAccuracyChanged (Sensor sensor, int accuracy) {
+					Log.d(LOG_CAT, sensor.getName() + " accuracy changed to " + accuracy);
+				}
+
+				public void onSensorChanged (SensorEvent event) {
+					compassValues = event.values;
+					Log.d(LOG_CAT, event.sensor.getName() + " values are " + event.values);
+
+					if (accelValues != null) {
+						float[] R = new float[9];
+						float[] I = new float[9];
+		
+						SensorManager.getRotationMatrix(R, I, accelValues, compassValues);
+
+						Log.d("CompassListener", "R is " + R[0] + " " + R[1] + " " + R[2]);
+						Log.d("CompassListener", "I is " + I[0] + " " + I[1] + " " + I[2]);
+
+						overlay.setOrientation(R, I);
+
+					}
+				}
+			};
+
+		Sensor compass = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		manager.registerListener(compassListener, compass, SensorManager.SENSOR_DELAY_NORMAL);
 
 		for(Sensor sensor: sensors) {
 			Log.d(LOG_CAT, "Sensor found: " + sensor.getName());
 		}
 
-		//float[] R = new float[9];
-		//float[] I = new float[9];
-		//
-		//
-		//
-		//SensorManager.getRotationMatrix(R, I, float[], float[]);
 
 	}
 
