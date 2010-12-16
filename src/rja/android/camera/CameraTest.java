@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.hardware.SensorManager;
+import android.hardware.Sensor;
 
 
 public class CameraTest extends Activity
@@ -138,6 +140,21 @@ public class CameraTest extends Activity
 
 		currentLocationProvider = LocationManager.NETWORK_PROVIDER;
 		requestLocationUpdates();
+
+		SensorManager manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		List<Sensor> sensors = manager.getSensorList(Sensor.TYPE_ALL);
+
+		for(Sensor sensor: sensors) {
+			Log.d(LOG_CAT, "Sensor found: " + sensor.getName());
+		}
+
+		//float[] R = new float[9];
+		//float[] I = new float[9];
+		//
+		//
+		//
+		//SensorManager.getRotationMatrix(R, I, float[], float[]);
+
 	}
 
 	private void requestLocationUpdates() {
