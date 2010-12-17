@@ -137,12 +137,12 @@ public class CameraTest extends Activity
 		locCriteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
 		//locCriteria.setBearingRequired(true);
 
-		Log.d(LOG_CAT, "Criteria: accuracy = " + locCriteria.getAccuracy());
-		Log.d(LOG_CAT, "Criteria: altitude = " + locCriteria.isAltitudeRequired());
-		Log.d(LOG_CAT, "Criteria: bearing = " + locCriteria.isBearingRequired());
-		Log.d(LOG_CAT, "Criteria: cost = " + locCriteria.isCostAllowed());
-		Log.d(LOG_CAT, "Criteria: power = " + locCriteria.getPowerRequirement());
-		Log.d(LOG_CAT, "Criteria: speed = " + locCriteria.isSpeedRequired());
+		Log.v(LOG_CAT, "Criteria: accuracy = " + locCriteria.getAccuracy());
+		Log.v(LOG_CAT, "Criteria: altitude = " + locCriteria.isAltitudeRequired());
+		Log.v(LOG_CAT, "Criteria: bearing = " + locCriteria.isBearingRequired());
+		Log.v(LOG_CAT, "Criteria: cost = " + locCriteria.isCostAllowed());
+		Log.v(LOG_CAT, "Criteria: power = " + locCriteria.getPowerRequirement());
+		Log.v(LOG_CAT, "Criteria: speed = " + locCriteria.isSpeedRequired());
 
 		currentLocationProvider = locManager.getBestProvider(locCriteria, false);
 		Log.d(LOG_CAT, "Best provider is: " + currentLocationProvider);
@@ -165,7 +165,7 @@ public class CameraTest extends Activity
 
 				public void onSensorChanged (SensorEvent event) {
 					accelValues = event.values;
-					Log.d(LOG_CAT, event.sensor.getName() + " values are " + event.values);
+					Log.v(LOG_CAT, event.sensor.getName() + " values are " + event.values);
 				}
 			};
 
@@ -179,7 +179,7 @@ public class CameraTest extends Activity
 
 				public void onSensorChanged (SensorEvent event) {
 					compassValues = event.values;
-					Log.d(LOG_CAT, event.sensor.getName() + " values are " + event.values);
+					Log.v(LOG_CAT, event.sensor.getName() + " values are " + event.values);
 
 					if (accelValues != null) {
 						float[] R = new float[9];
@@ -187,11 +187,15 @@ public class CameraTest extends Activity
 		
 						SensorManager.getRotationMatrix(R, I, accelValues, compassValues);
 
-						Log.d("CompassListener", "R is " + R[0] + " " + R[1] + " " + R[2]);
-						Log.d("CompassListener", "I is " + I[0] + " " + I[1] + " " + I[2]);
+						Log.v("CompassListener", "R is " + R[0] + " " + R[1] + " " + R[2]);
+						Log.v("CompassListener", "I is " + I[0] + " " + I[1] + " " + I[2]);
 
-						overlay.setOrientation(R, I);
+						float inclination = SensorManager.getInclination(I);
 
+						float[] orientation = new float[3];
+						orientation = SensorManager.getOrientation(R, orientation);
+
+						overlay.setOrientation(R, I, orientation, inclination);
 					}
 				}
 			};

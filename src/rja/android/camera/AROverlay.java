@@ -38,7 +38,10 @@ public class AROverlay extends View {
 		paint.setColor(Color.BLUE);
 		paint.setTextSize(15.0f);
 
+		Log.v(LOG_CAT, "Message length is " + message.length);
+
 		for (int i=0; i<message.length; i++) {
+			Log.v(LOG_CAT, "Message line " + i + " is " + message[i]);
 			if (message[i] != null) {
 				canvas.drawText(message[i], 10, 10 + (i*20), paint);
 			}
@@ -49,8 +52,8 @@ public class AROverlay extends View {
 
 	public void setLocation(String[] message) {
 
-		if (message.length != 5) {
-			this.message = new String[5];
+		if (message.length != 11) {
+			this.message = new String[11];
 		}
 		this.message[0] = message[0];
 		this.message[1] = message[1];
@@ -59,20 +62,32 @@ public class AROverlay extends View {
 		invalidate();
 	}
 
-	public void setOrientation(float[] R, float[] I) {
-		if (message.length != 5) {
-			this.message = new String[5];
+	public void setOrientation(float[] R, float[] I, float[] orientation, float inclination) {
+		if (message.length != 11) {
+			this.message = new String[11];
 		}
+
+		Log.v(LOG_CAT, "Setting orientation");
 
 		this.message[3] = "R is ";
+		this.message[4] = "     ";
+		this.message[5] = "     ";
 		for (int i=0; i<R.length; i++) {
-			this.message[3] += R[i] + ",";
+			this.message[3+(i/3)] += R[i] + ", ";
 		}
 
-		this.message[4] = "I is ";
+		this.message[6] = "I is ";
+		this.message[7] = "     ";
+		this.message[8] = "     ";
 		for (int i=0; i<I.length; i++) {
-			this.message[4] += I[i] + ",";
+			this.message[6+(i/3)] += I[i] + ", ";
 		}
+
+		this.message[9] = "Orientation: " + orientation[0] + ", " + orientation[1] + ", " + orientation[2];
+		this.message[10] = "Inclination: " + inclination;
+
+		invalidate();
+
 	}
 
 	public void setMessage(String message) {
